@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 12:53:16 by mehdi             #+#    #+#             */
-/*   Updated: 2025/06/28 12:51:07 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/06/28 13:07:05 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,17 @@ void	tokenize_line(t_token **token, char *str)
 		else
 		{
 			new_word = split_node_word(res[i]);
+
+			
+			// t_token_word *tmp;
+			// tmp = new_word;
+			// while (tmp)
+			// {
+			// 	printf("%s\n", tmp->word);
+			// 	tmp = tmp->next;
+			// }
+
+			
 			new = new_node(new_word);
 		}
 		if (!new)
@@ -64,7 +75,17 @@ t_token_word	*split_node_word(char *str)
 		add_back_word(&head_word, new_word);
 		i++;
 	}
-	free_split(word);
+	
+	// t_token_word *tmp;
+	// tmp = head_word;
+	// while (tmp)
+	// {
+	// 	printf("%s\n", tmp->word);
+	// 	tmp = tmp->next;
+	// }
+
+	
+	// free_split(word);
 	return (head_word);
 }
 
