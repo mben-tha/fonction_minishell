@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 12:53:09 by mehdi             #+#    #+#             */
-/*   Updated: 2025/06/28 13:07:10 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/06/28 13:28:44 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int main(int ac, char **av)
 			free(input);
 			tokenize_line(&head, str);
 			print_tokens(head);
-			// ft_free_token(&head);
+			ft_free_token(&head);
 			free(str);
 		}
 	}
@@ -81,18 +81,25 @@ void print_tokens(t_token *token)
 }
 
 
-// void	ft_free_token(t_token **stack)
-// {
-// 	t_token	*tmp;
+void	ft_free_token(t_token **token)
+{
+	t_token			*tmp;
+	t_token_word	*tmp2;
+	t_token_word	*word;
 
-// 	while (*stack)
-// 	{
-// 		tmp = *stack;
-// 		*stack = (*stack)->next;
-// 		free(tmp->type);
-// 		free(tmp->word.word);
-// 		free(tmp->word.expendable);
-// 		free(tmp);
-// 	}
-// 	*stack = NULL;
-// }
+	while (*token)
+	{
+		tmp = *token;
+		*token = (*token)->next;
+		word = tmp->word;
+		while (word)
+		{
+			tmp2 = word;
+			word = word->next;
+			free(tmp2->word);
+			free(tmp2);
+		}
+		free(tmp);
+	}
+	*token = NULL;
+}
