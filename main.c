@@ -1,119 +1,98 @@
-#include <stdio.h>
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/20 12:53:09 by mehdi             #+#    #+#             */
+/*   Updated: 2025/06/28 12:47:25 by mehdi            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int len_clean_space(char *str);
-int is_double_operator(char *str);
+#include "minishell.h"
 
-char    *clean_space(char *str)
+void	sig_handler(int sig)
 {
-    char    *res;
-    int     i;
-    int     j;
-
-    j = 0;
-    i = 0;
-    res = malloc(sizeof(char) * (len_clean_space(str) + 1));
-    if (!res)
-        return (NULL);
-    while (str[i] == ' ')
-        i++;
-    while (str[i])
-    {
-        if (str[i] == ' ')
-        {
-            while (str[i] == ' ')
-                i++;
-            if (!str[i])
-                break ;
-            res[j++] = ' ';
-        }
-		else if (is_double_operator(&str[i]))
-		{
-			if (i != 0 && str[i-1] != ' ')
-                res[j++] = ' ';
-			res[j++] = str[i];
-			res[j++] = str[i];
-			if (str[i+2] && str[i+2] != ' ')
-                res[j++] = ' ';
-			i += 2;
-		}
-        else if (str[i] == '<' || str[i] == '>' || str[i] == '|')
-        {
-            if (i != 0 && str[i-1] != ' ')
-                res[j++] = ' ';
-            res[j++] = str[i];
-            if (str[i+1] && str[i+1] != ' ')
-                res[j++] = ' ';
-            i++;
-        }
-        else
-        {
-            res[j++] = str[i];
-            i++;
-        }
-    }
-    res[j] = '\0';
-    return res;
+	(void)sig;
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	write(1, "\n", 1);
+	rl_redisplay();
 }
 
-int len_clean_space(char *str)
-{
-    int i;
-    int len;
-
-    len = 0;
-    i = 0;
-    while (str[i] == ' ')
-        i++;
-    while (str[i])
-    {
-        if (str[i] == ' ')
-        {
-            while (str[i] == ' ')
-                i++;
-            if (!str[i])
-                return len;
-            len++;
-        }
-		else if (is_double_operator(&str[i]))
-		{
-			if (i != 0 && str[i-1] != ' ')
-                len++;
-			if (str[i+2] && str[i+2] != ' ')
-                len++;
-			i += 2;
-			len += 2;
-		}
-        else if (str[i] == '<' || str[i] == '>' || str[i] == '|')
-        {
-            if (i != 0 && str[i-1] != ' ')
-                len++;
-            if (str[i+1] && str[i+1] != ' ')
-                len++;
-            i++;
-            len++;
-        }
-        else
-        {
-            i++;
-            len++;
-        }
-    }
-    return len;
-}
-
-int is_double_operator(char *str)
-{
-    return ((str[0] == '<' && str[1] == '<') || (str[0] == '>' && str[1] == '>'));
-}
 
 int main(int ac, char **av)
 {
-    char *test;
+	char	*input;
+	char	*str;
+	t_token	*head;
 
-    test = clean_space(av[1]);
-    printf("[%s]\n", test);
-	free(test);
-
-    // printf("%dY\n", len_clean_space(av[1]));
+	head = NULL;
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN);
+	while (1)
+	{
+		input = readline("minishell$ ");
+		if (!input)
+		{
+			printf("exit\n");
+			break;
+		}
+		if (*input)
+			add_history(input);
+		if (quote_not_closed(input))
+			free(input);
+		else
+		{
+			str = clean_space(input);
+			free(input);
+			tokenize_line(&head, str);
+			print_tokens(head);
+			// ft_free_token(&head);
+			free(str);
+		}
+	}
+	return (0);
 }
+
+void	print(t_token *stack)
+{
+	while (stack)
+	{
+		printf("type : %d\n", stack->type);
+		stack = stack->next;
+	}
+}
+
+void print_tokens(t_token *token)
+{
+	while (token)
+	{
+		printf("Token type: %d\n", token->type);
+		t_token_word *word = token->word;
+		while (word)
+		{
+			printf("  Word: %s (expendable: %d)\n", word->word, word->expendable);
+			word = word->next;
+		}
+		token = token->next;
+	}
+}
+
+
+// void	ft_free_token(t_token **stack)
+// {
+// 	t_token	*tmp;
+
+// 	while (*stack)
+// 	{
+// 		tmp = *stack;
+// 		*stack = (*stack)->next;
+// 		free(tmp->type);
+// 		free(tmp->word.word);
+// 		free(tmp->word.expendable);
+// 		free(tmp);
+// 	}
+// 	*stack = NULL;
+// }

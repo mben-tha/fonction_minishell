@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:41:05 by mehdi             #+#    #+#             */
-/*   Updated: 2025/06/26 17:45:27 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/06/26 13:42:54 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,13 +140,13 @@ int is_double_operator(char *str)
     return ((str[0] == '<' && str[1] == '<') || (str[0] == '>' && str[1] == '>'));
 }
 
-// int main(int ac, char **av)
-// {
-//     char *test;
+int main(int ac, char **av)
+{
+    char *test;
 
-//     test = clean_space(av[1]);
-//     printf("[%s]\n", test);
-// 	free(test);
+    test = clean_space(av[1]);
+    printf("[%s]\n", test);
+	free(test);
 
-//     printf("%dY\n", len_clean_space(av[1]));
-// }
+    // printf("%dY\n", len_clean_space(av[1]));
+}
