@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 12:53:16 by mehdi             #+#    #+#             */
-/*   Updated: 2025/06/28 13:32:08 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/06/29 12:25:48 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	tokenize_line(t_token **token, char *str)
 
 	i = 0;
 	res = ft_split(str, ' ');
+	int j = 0;
 	if (!res)
 		exit(1);
 	while (res[i])

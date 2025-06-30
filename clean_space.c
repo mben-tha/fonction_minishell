@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:41:05 by mehdi             #+#    #+#             */
-/*   Updated: 2025/06/26 17:45:27 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/06/29 11:49:48 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int		is_double_operator(char *str);
 char    *clean_space(char *str)
 {
     char    *res;
+	char	quote;
     int     i;
     int     j;
 
@@ -31,7 +32,8 @@ char    *clean_space(char *str)
     res = malloc(sizeof(char) * (len_clean_space(str) + 1));
     if (!res)
         return (NULL);
-    clean_space3(str, &i);
+    while (str[i] == ' ')
+        i++;
     while (str[i])
     {
         if (str[i] == ' ')
@@ -42,8 +44,42 @@ char    *clean_space(char *str)
                 break ;
             res[j++] = ' ';
         }
+		else if (str[i] == '\'' || str[i] == '\"')
+		{
+			res[j++] = str[i];
+			quote = str[i++];
+			while (str[i] != quote)
+			{
+				res[j++] = str[i];
+				i++;
+			}
+			res[j++] = str[i];
+			i++;
+		}
+		else if (is_double_operator(&str[i]))
+		{
+			if (i != 0 && str[i-1] != ' ')
+				res[j++] = ' ';
+			res[j++] = str[i];
+			res[j++] = str[i];
+			if (str[i+2] && str[i+2] != ' ')
+				res[j++] = ' ';
+			i += 2;
+		}
+		else if (str[i] == '<' || str[i] == '>' || str[i] == '|')
+		{
+			if (i != 0 && str[i-1] != ' ')
+				res[j++] = ' ';
+			res[j++] = str[i];
+			if (str[i+1] && str[i+1] != ' ')
+				res[j++] = ' ';
+			i++;
+		}
 		else
-			clean_space2(str, res, &i, &j);
+		{
+			res[j++] = str[i];
+			i++;
+		}
     }
     res[j] = '\0';
     return res;
@@ -85,8 +121,9 @@ void	clean_space2(char *str, char *res, int *i, int *j)
 
 int len_clean_space(char *str)
 {
-    int i;
-    int len;
+    int 	i;
+    int 	len;
+	char	quote;
 
     len = 0;
     i = 0;
@@ -102,8 +139,41 @@ int len_clean_space(char *str)
                 return len;
             len++;
         }
-        else
-			len_clean_space2(str, &i, &len);
+		else if (str[i] == '\'' || str[i] == '\"')
+		{
+			quote = str[i++];
+			len++;
+			while (str[i] != quote)
+			{
+				i++;
+				len++;
+			}
+			i++;
+			len++;
+		}
+        else if (is_double_operator(&str[i]))
+		{
+			if (i != 0 && str[i-1] != ' ')
+				len++;
+			if (str[i+2] && str[i+2] != ' ')
+				len++;
+			i += 2;
+			len += 2;
+		}
+		else if (str[i] == '<' || str[i] == '>' || str[i] == '|')
+		{
+			if (i != 0 && str[i-1] != ' ')
+				len++;
+			if (str[i+1] && str[i+1] != ' ')
+				len++;
+			i++;
+			len++;
+		}
+		else
+		{
+			i++;
+			len++;
+		}
     }
     return len;
 }

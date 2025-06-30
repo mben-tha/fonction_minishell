@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 12:53:09 by mehdi             #+#    #+#             */
-/*   Updated: 2025/06/28 13:28:44 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/06/29 11:53:55 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int main(int ac, char **av)
 		else
 		{
 			str = clean_space(input);
+			printf("%s\n", str);
 			free(input);
 			tokenize_line(&head, str);
 			print_tokens(head);
